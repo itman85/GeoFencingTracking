@@ -113,7 +113,8 @@ public class MainActivity extends AppCompatActivity implements OnCompleteListene
         // Get the geofences used. Geofence data is hard coded in this sample.
         populateGeofenceList();
 
-       mGeofencingClient = LocationServices.getGeofencingClient(this);
+        //TEST
+       //mGeofencingClient = LocationServices.getGeofencingClient(this);
 
         List<String> permissionList = new ArrayList<>();
 
@@ -149,11 +150,12 @@ public class MainActivity extends AppCompatActivity implements OnCompleteListene
     public void onStart() {
         super.onStart();
 
-        if (!checkPermissions()) {
+        //TEST
+       /* if (!checkPermissions()) {
             requestPermissions();
         } else {
             performPendingGeofenceTask();
-        }
+        }*/
     }
 
     /**
@@ -185,7 +187,14 @@ public class MainActivity extends AppCompatActivity implements OnCompleteListene
             requestPermissions();
             return;
         }
-        addGeofences();
+         Intent serviceIntent = new Intent(MainActivity.this, GeofencingRequestUpdateService.class);
+            serviceIntent.putExtra("action","START");
+            startService(serviceIntent);
+
+        updateGeofencesAdded(!getGeofencesAdded());
+        setButtonsEnabledState();
+            //TEST
+        //addGeofences();
     }
 
     public void askPermission(View view) {
@@ -213,8 +222,9 @@ public class MainActivity extends AppCompatActivity implements OnCompleteListene
             return;
         }
 
-        mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                .addOnCompleteListener(this);
+        //TEST
+        //mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+        //        .addOnCompleteListener(this);
     }
 
     /**
@@ -227,7 +237,14 @@ public class MainActivity extends AppCompatActivity implements OnCompleteListene
             requestPermissions();
             return;
         }
-        removeGeofences();
+        //TEST
+        //removeGeofences();
+        Intent serviceIntent = new Intent(MainActivity.this, GeofencingRequestUpdateService.class);
+        serviceIntent.putExtra("action","STOP");
+        startService(serviceIntent);
+
+        updateGeofencesAdded(!getGeofencesAdded());
+        setButtonsEnabledState();
     }
 
     /**

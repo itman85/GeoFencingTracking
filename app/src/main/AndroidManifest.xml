@@ -50,5 +50,6 @@ limitations under the License.
             android:name=".GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service android:name=".GeofencingRequestUpdateService" android:process="geo" />
     </application>
 </manifest>

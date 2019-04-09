@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Utils {
+    public static final String KEY_REMOVE_LIST = "remove";
+    public static final String KEY_ADD_NEW_LIST = "add_new";
+    public static final String GEO_ID_PLIT_CHAR = "_";
     public static void appendLog(String tag,String type,String text)
     {
         Thread task = new Thread(() -> {
