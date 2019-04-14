@@ -23,7 +23,7 @@ limitations under the License.
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Base">
@@ -50,6 +50,6 @@ limitations under the License.
             android:name=".GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service android:name=".GeofencingRequestUpdateService" android:process="geo" />
+        <service android:name=".GeofencingRequestUpdateService" android:process=":trackinggeo" android:stopWithTask="false" />
     </application>
 </manifest>

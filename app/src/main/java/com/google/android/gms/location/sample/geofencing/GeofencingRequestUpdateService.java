@@ -30,6 +30,7 @@ public class GeofencingRequestUpdateService extends Service {
      * Used when requesting to add or remove geofences.
      */
     private PendingIntent mGeofencePendingIntent;
+    private boolean isJustCreated;
 
     @Nullable
     @Override
@@ -43,11 +44,12 @@ public class GeofencingRequestUpdateService extends Service {
         Log.i(TAG, "Geo fencing request service created");
         Utils.appendLog(TAG,"I","Geo fencing request service created");
         geofencingClient = LocationServices.getGeofencingClient(this);
+        isJustCreated = true;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.hasExtra("action") && "START".equals(intent.getStringExtra("action"))) {
+        if((isJustCreated && intent==null) || (intent!=null && intent.hasExtra("action") && "START".equals(intent.getStringExtra("action")))) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Log.e(TAG, "No permission for geo fencing");
                 Utils.appendLog(TAG,"I","No permission for geo fencing");
@@ -82,11 +84,12 @@ public class GeofencingRequestUpdateService extends Service {
                             });
                 }
             }
-        }else if(intent.hasExtra("action") && "STOP".equals(intent.getStringExtra("action"))) {
+        }else if(intent!=null &&  intent.hasExtra("action") && "STOP".equals(intent.getStringExtra("action"))) {
             Log.e(TAG, "***Geo fencing request remove...");
             Utils.appendLog(TAG,"I","***Geo fencing request remove...");
             stopGeofencingMonitoring();
         }
+        isJustCreated = false;
         return START_STICKY;
     }
 
@@ -94,18 +97,19 @@ public class GeofencingRequestUpdateService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "Geo fencing request service destroy");
+        Utils.appendLog(TAG,"I","***Geo fencing request service destroy");
     }
 
     public void extractGeoDataFromIntent(Intent intent, List<String> addNewGeoSetting, List<String> removeGeoSetting) {
         addNewGeoSetting.add("ok");//test data
-        if (intent.hasExtra(KEY_REMOVE_LIST)) {
+        if (intent!=null && intent.hasExtra(KEY_REMOVE_LIST)) {
             String tempRemove = intent.getStringExtra(KEY_REMOVE_LIST);
             String[] tempArray = tempRemove.split(GEO_ID_PLIT_CHAR);
             for (String value:tempArray){
                 removeGeoSetting.add(value);
             }
         }
-        if (intent.hasExtra(KEY_ADD_NEW_LIST)) {
+        if (intent!=null && intent.hasExtra(KEY_ADD_NEW_LIST)) {
             String tempAdd = intent.getStringExtra(KEY_ADD_NEW_LIST);
             String[] tempArray = tempAdd.split(GEO_ID_PLIT_CHAR);
             for (String value:tempArray){
